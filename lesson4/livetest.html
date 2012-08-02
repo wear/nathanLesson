@@ -1,0 +1,122 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Live Tests</title>
+  <script src="parser.js"></script>
+  <script src="scheem.js"></script>
+	<script src="codemirror/lib/codemirror.js"></script>
+	<script src="codemirror/mode/scheme.js"></script>
+  <script src="http://nathansuniversity.com/js/jquery-1.7.1.min.js"></script>
+  <link rel="stylesheet" href="bootstrap.min.css" />
+  <link rel="stylesheet" href="codemirror/lib/codemirror.css">
+      <style type="text/css">
+      /* Override some defaults */
+      html, body {
+        background-color: #eee;
+      }
+
+      .container > footer p {
+        text-align: center; /* center align it with the container */
+      }
+      .container {
+        width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+      }
+
+      /* The white background content wrapper */
+      .content {
+        background-color: #fff;
+        padding: 20px;
+        margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+        -webkit-border-radius: 0 0 6px 6px;
+           -moz-border-radius: 0 0 6px 6px;
+                border-radius: 0 0 6px 6px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+      }
+
+      /* Page header tweaks */
+      .page-header {
+        background-color: #f5f5f5;
+        padding: 20px 20px 10px;
+        margin: -20px -20px 20px;
+      }
+
+      /* Styles you shouldn't keep as they are for displaying this base example only */
+      .content .span10,
+      .content .span4 {
+        min-height: 500px;
+      }
+      /* Give a quick and non-cross-browser friendly divider */
+      .content .span4 {
+        margin-left: 0;
+        padding-left: 19px;
+        border-left: 1px solid #eee;
+      }
+
+      .topbar .btn {
+        border: 0;
+      }
+
+      #console{
+      	margin:10px 0;
+      }
+
+      .CodeMirror{
+      	border-top: 1px solid #000;
+      	border-bottom: 1px solid #000;
+      }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="content">
+      	<div class='page-header'>
+      		<h1>Create your own programming language - Lesson 4</h1>
+      	</div>
+				<textarea id="input"  class='xxlarge' rows='10' /></textarea>
+      <p style='text-align:center;padding:10px;'>
+  			<input id="submitbutton" type="button" class='btn primary' value="Run" />	
+      <p>
+			<pre id="console" class="prettyprint linenums" >
+			  <p>This is where output goes.</p>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+	// Utility function to log messages
+	var evalScheemString = function(words){
+	  return evalScheem(SCHEEM.parse(words),{});
+	}
+
+	var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('input'),{});
+
+	var log_console = function(msg) {
+	  $('#console').append('<p>' + msg + '</p>');
+	};
+	// After page load
+	$(function() {
+	  $('#submitbutton').click(function() {
+	    var user_text = myCodeMirror.getValue();
+	    $('#console').html(''); // clear console
+	    log_console('Your input was: "' + user_text + '"');
+	    try {
+	      var parsed = SCHEEM.parse(user_text);
+	      log_console('Parsed: ' + JSON.stringify(parsed));
+	      try {
+	        var result = evalScheem(parsed, {});
+	        log_console('Result: ' + JSON.stringify(result));
+	      }
+	      catch(e) {
+	        log_console('Eval Error: ' + e);
+	      }
+	    }
+	    catch(e) {
+	      log_console('Parse Error: ' + e);
+	    }
+	  });
+	});
+</script>
+</body>
+</html>
