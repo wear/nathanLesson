@@ -1,0 +1,33 @@
+/* 
+三种情况，第一种，完全是原子
+第二种情况是带()的原子列表，多个原子列表用空格分隔
+*/
+
+start =
+    _ r:expression+
+     {return r;}
+
+expression =
+  	atom / list_atom / quote_expr
+
+list_atom = 
+    "("_ args:expression+ _")" _
+      {return args;}   
+
+quote_expr =
+  "'" expr:expression
+    { return ['quote', expr]; }
+
+comment =
+	";;" [^\n]* [\n]
+
+atom =
+    chars:validchar+ _
+        { return chars.join(""); }
+
+nl = [\r\n]
+sp = [ \t]
+_  = ( nl / sp / comment )*
+
+validchar
+    = [0-9a-zA-Z_?!+\-=@#$%^&*/.]
